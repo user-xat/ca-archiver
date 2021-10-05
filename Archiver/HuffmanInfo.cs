@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Archiver
 {
@@ -24,6 +22,10 @@ namespace Archiver
             Tree = CreateHuffmanTree(queue);
             Table = new Dictionary<char, string>();
             GetSymbolCodes(Tree, "");
+            //foreach (char key in Table.Keys)
+            //{
+            //    Console.WriteLine(key + " = " + Table[key]);
+            //}
         }
 
         private Dictionary<char, double> GetFreq(string filename)
@@ -102,26 +104,16 @@ namespace Archiver
             var sr = new ArchReader(archFile); // нужно побитовое чтение
             var sw = new StreamWriter(txtFile, false, Encoding.Unicode);
             byte curBit;
-            string code = "";
-            bool endOfFile = false;
+            HuffmanTree node = Tree;
             while (sr.ReadBit(out curBit))
             {
-                // TODO: побитово (!) разбираем архив
-                code += curBit.ToString();
-                if(Table.ContainsValue(code))
+                if (curBit == 0) node = node.left;
+                else node = node.rigth;
+                if (node.isTerminal)
                 {
-                    foreach(char key in Table.Keys)
-                    {
-                        if(Table[key] == code)
-                        {
-                            if (key == '\0')
-                                endOfFile = true;
-                            else sw.Write(key);
-                            break;
-                        }
-                    }
-                    if (endOfFile) break;
-                    code = "";
+                    if (node.ch == '\0') break;
+                    sw.Write(node.ch);
+                    node = Tree;
                 }
             }
             sr.Finish();

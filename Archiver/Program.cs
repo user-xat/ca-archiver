@@ -11,8 +11,8 @@ namespace Archiver
     {
         static void Main(string[] args)
         {
-            string path_to_freq = @"C:\Dev Projects\C#\Archiver\Archiver\freq.txt";
-            string filename = "etalon2";
+            string path_to_freq = "freq.txt";
+            string filename = "etalon";
             if (!File.Exists(path_to_freq))
             {
                 Console.WriteLine("Не найден файл с частотами символов!");
